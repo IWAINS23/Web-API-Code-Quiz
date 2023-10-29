@@ -63,6 +63,33 @@ currentQuestion.choices.forEach(function(choice, index) {
 
 function clickQuestion () {
 
+if(this.value !== questions[currentQuestionIndex].answer) {
+  time -= 15;
+
+  if (time < 0) {
+time = 0;}
+
+
+    tElement.textContent = time;
+    feedbackElement.textContent = "Wrong"
+  } else {
+    sfxRight.play();
+    feedbackElement.textContent = "Correct!";
+  }
+
+  feedbackElement.setAttribute("class", "feedback");
+
+  setTimeout(function () {
+    feedbackElement.setAttribute("class", "feedback hide");
+  }, 1000);
+
+  currentQuestionIndex++;
+  if (currentQuestionIndex === questions.length) {
+    endQuiz()
+  } else {
+    getQuestion();
+  }
+
 }
 
 // timer
@@ -76,10 +103,26 @@ tElement.textContent = time
 // highscore
 function HighScore () {
 
+  let initials = initialElement.value.trim();
+console.log(initials)
+
+if(initials !== "") {
+let highScores = JSON.parse(localStorage.getItem("highscores")) || [];
+let newScore = {
+  score: time,
+  initials: initials
+}
+highScores.push(newScore);
+localStorage.setItem("highscores",JSON.stringify(highScores));
+window.location.href = "highscores.html"
+}
+
 }
 // check entry
 function checkEntry () {
-
+if (event.key === "Enter") {
+  saveHighScore ();
+}
 }
 //start button 
 startButton.addEventListener("click", startQuiz);
