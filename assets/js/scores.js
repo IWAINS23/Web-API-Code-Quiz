@@ -1,11 +1,11 @@
 function printHighScores (){
-let highscore = JSON.parse(localStorage.getItem("highscores") || [])
+let highScores = JSON.parse(localStorage.getItem("highscores")) || []
 
-highscore.sort(function(a,b){
+highScores.sort(function(a, b){
     return b.score - a.score;
 })
 
-highscore.forEach(function(score){
+highScores.forEach(function(score){
     let li = document.createElement("li")
     li.textContent = `${score.initals} - ${score.score}`
 
@@ -17,7 +17,8 @@ highscore.forEach(function(score){
 }
 
 function clearHighScore(){
-
+localStorage.removeItem("highscores");
+window.location.reload();
 }
 
 let clearButton = document.getElementById("clear");
