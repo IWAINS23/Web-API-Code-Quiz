@@ -1,47 +1,63 @@
-var timeEl = document.querySelector(".time");
-
-// Selects element by id
-var mainEl = document.getElementById("main");
-
-var secondsLeft = 10;
-
-function setTime() {
-  // Sets interval in variable
-  var timerInterval = setInterval(function() {
-    secondsLeft--;
-    timeEl.textContent = secondsLeft + " seconds left till colorsplosion.";
-
-    if(secondsLeft === 0) {
-      // Stops execution of action at set interval
-      clearInterval(timerInterval);
-      // Calls function to create and append image
-      sendMessage();
-    }
-
-  }, 1000);
-}
-
 let currentQuestionIndex = 0;
 let time = questions.length * 15;
 let timeID;
 
-let qElements = document.getElementById("questions")
-let tElemet = document.getElementById("time")
+let qElement = document.getElementById("questions")
+let tElement = document.getElementById("time")
 let choiceElement = document.getElementById("choices")
 let submitButton = document.getElementById("submit")
 let startButton = document.getElementById("start")
 let initialElement = document.getElementById("initials")
 let feedbackElement = document.getElementById("feedback")
 
-function startQuiz () {
+let sfxRight = new Audio("assets/sfx/correct.wav")
 
+function startQuiz () {
+let startScreenElement = document.getElementById("start-screen");
+startScreenElement.setAttribute("class", "hide");
+  
+qElement.removeAttribute("class");
+timeID = setInterval(Timer, 1000)
+
+tElement.textContent = time;
+
+getQuestion ();
 }
 
 function endQuiz () {
 
+  clearInterval(timeID);
+
+  let endScreenElement = document.getElementById("end-screen");
+  endScreenElement.removeAttribute("class");
+
+  let finalScoreElement = document.getElementById("final-score")
+  finalScoreElement.textContent = time;
+
+  qElement.setAttribute("class", "hide");
 }
 
 function getQuestion () {
+let currentQuestion = questions[currentQuestionIndex];
+
+let titleElement = document.getElementById("question-title");
+
+titleElement.textContent = currentQuestion.title;
+
+choiceElement.innerHTML = "";
+
+currentQuestion.choices.forEach(function(choice, index) {
+  let choiceButton = document.createElement("button");
+
+  choiceButton.setAttribute("class", "choice")
+  choiceButton.setAttribute("value", choice)
+
+  choiceButton.textContent = `${index + 1}. ${choice}`
+
+  choiceButton.addEventListener("click", clickQuestion);
+
+  choiceElement.append(choiceButton)
+})
 
 }
 
@@ -51,9 +67,11 @@ function clickQuestion () {
 
 // timer
 function Timer () {
-  // timeID = setInterval(function(){
-  //   secondsLeft--;
-  //   timeEl.textContent = secondsLeft + " seconds left till colorsplosion.";
+time --;
+tElement.textContent = time
+  if(time <= 0){
+    endQuiz();
+  }
 }
 // highscore
 function HighScore () {
